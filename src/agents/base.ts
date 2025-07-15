@@ -269,7 +269,7 @@ export abstract class BaseAgent {
       callbacks?: StreamCallbacks;
     } = {}
   ): Promise<AgentResponse> {
-    const { timeoutMs = 3600000, background = false, callbacks } = options;
+    const { timeoutMs = 1800000, background = false, callbacks } = options;
 
     try {
       const sbx = await this.getSandbox();
@@ -364,7 +364,7 @@ export abstract class BaseAgent {
           // Clone directly into the working directory, not into a subdirectory
           await sbx.commands.run(
             `cd ${this.WORKING_DIR} && git clone https://x-access-token:${this.config.githubToken}@github.com/${this.config.repoUrl}.git .`,
-            { timeoutMs: 3600000, background: background || false }
+            { timeoutMs: 1800000, background: background || false }
           );
         }
 
@@ -434,7 +434,7 @@ export abstract class BaseAgent {
       }
 
       const result = await sbx.commands.run(executeCommand, {
-        timeoutMs: 3600000,
+        timeoutMs: 1800000,
         background: background || false,
         onStdout: (data) => stdoutBuffer?.append(data),
         onStderr: (data) => stderrBuffer?.append(data),
@@ -480,13 +480,13 @@ export abstract class BaseAgent {
     // Check git status for changes
     const gitStatus = await sbx.commands.run(
       `cd ${this.WORKING_DIR} && git status --porcelain`,
-      { timeoutMs: 3600000 }
+      { timeoutMs: 1800000 }
     );
 
     // Check for untracked files
     const untrackedFiles = await sbx.commands.run(
       `cd ${this.WORKING_DIR} && git ls-files --others --exclude-standard`,
-      { timeoutMs: 3600000 }
+      { timeoutMs: 1800000 }
     );
 
     // Check if there are any changes to commit
@@ -515,13 +515,13 @@ export abstract class BaseAgent {
     const diffHead = await sbx.commands.run(
       `cd ${this.WORKING_DIR} && git --no-pager diff --no-color HEAD`,
       {
-        timeoutMs: 3600000,
+        timeoutMs: 1800000,
       }
     );
 
     const patch = await sbx.commands.run(
       `cd ${this.WORKING_DIR} && git --no-pager diff --no-color --diff-filter=ACMR`,
-      { timeoutMs: 3600000 }
+      { timeoutMs: 1800000 }
     );
 
     let patchContent = patch?.stdout || diffHead?.stdout || "";
@@ -535,14 +535,14 @@ export abstract class BaseAgent {
 
     await sbx.commands.run(
       `cd ${this.WORKING_DIR} && git add -A && git commit -m "${commitMessage}"`,
-      { timeoutMs: 3600000 }
+      { timeoutMs: 1800000 }
     );
 
     // Push the branch to GitHub
     await sbx.commands.run(
       `cd ${this.WORKING_DIR} && git push origin ${targetBranch}`,
       {
-        timeoutMs: 3600000,
+        timeoutMs: 1800000,
       }
     );
   }
@@ -564,30 +564,30 @@ export abstract class BaseAgent {
     // Get the current branch (base branch) BEFORE creating a new branch
     const baseBranch = await sbx.commands.run(
       `cd ${this.WORKING_DIR} && git rev-parse --abbrev-ref HEAD`,
-      { timeoutMs: 3600000 }
+      { timeoutMs: 1800000 }
     );
 
     // Debug: Check git status first
     await sbx.commands.run(`cd ${this.WORKING_DIR} && git status --porcelain`, {
-      timeoutMs: 3600000,
+      timeoutMs: 1800000,
     });
 
     // Debug: Check for untracked files
     const untrackedFiles = await sbx.commands.run(
       `cd ${this.WORKING_DIR} && git ls-files --others --exclude-standard`,
-      { timeoutMs: 3600000 }
+      { timeoutMs: 1800000 }
     );
 
     const diffHead = await sbx.commands.run(
       `cd ${this.WORKING_DIR} && git --no-pager diff --no-color HEAD`,
       {
-        timeoutMs: 3600000,
+        timeoutMs: 1800000,
       }
     );
 
     const patch = await sbx.commands.run(
       `cd ${this.WORKING_DIR} && git --no-pager diff --no-color --diff-filter=ACMR`,
-      { timeoutMs: 3600000 }
+      { timeoutMs: 1800000 }
     );
 
     if (
@@ -605,12 +605,12 @@ export abstract class BaseAgent {
     // If no diff but there are untracked files, we need to add them first
     if (!patchContent && untrackedFiles?.stdout) {
       await sbx.commands.run(`cd ${this.WORKING_DIR} && git add .`, {
-        timeoutMs: 3600000,
+        timeoutMs: 1800000,
       });
 
       const patchAfterAdd = await sbx.commands.run(
         `cd ${this.WORKING_DIR} && git --no-pager diff --no-color --cached`,
-        { timeoutMs: 3600000 }
+        { timeoutMs: 1800000 }
       );
       patchContent = patchAfterAdd?.stdout || "";
     }
@@ -635,7 +635,7 @@ export abstract class BaseAgent {
     const checkout = await sbx.commands.run(
       `cd ${this.WORKING_DIR} && git checkout -b ${_branchName} && git add -A && git commit -m "${escapedCommitMessage}"`,
       {
-        timeoutMs: 3600000,
+        timeoutMs: 1800000,
       }
     );
 
@@ -643,7 +643,7 @@ export abstract class BaseAgent {
     await sbx.commands.run(
       `cd ${this.WORKING_DIR} && git push origin ${_branchName}`,
       {
-        timeoutMs: 3600000,
+        timeoutMs: 1800000,
       }
     );
 

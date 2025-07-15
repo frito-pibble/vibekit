@@ -69,9 +69,8 @@ export async function deleteSessionAction(sessionId: string) {
       },
     },
     environment: {
-      northflank: {
-        apiKey: process.env.NORTHFLANK_API_KEY!,
-        projectId: process.env.NORTHFLANK_PROJECT_ID!,
+      e2b: {
+        apiKey: process.env.E2B_API_KEY!,
       },
     },
     sessionId,
@@ -107,9 +106,8 @@ export const createPullRequestAction = async ({
       },
     },
     environment: {
-      northflank: {
-        apiKey: process.env.NORTHFLANK_API_KEY!,
-        projectId: process.env.NORTHFLANK_PROJECT_ID!,
+      e2b: {
+        apiKey: process.env.E2B_API_KEY!,
       },
     },
     github: {

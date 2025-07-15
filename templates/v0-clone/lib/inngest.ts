@@ -69,9 +69,8 @@ export const runAgent = inngest.createFunction(
         },
       },
       environment: {
-        northflank: {
-          apiKey: process.env.NORTHFLANK_API_KEY!,
-          projectId: process.env.NORTHFLANK_PROJECT_ID!,
+        e2b: {
+          apiKey: process.env.E2B_API_KEY!,
         },
       },
       sessionId,
@@ -248,10 +247,8 @@ export const createSession = inngest.createFunction(
         },
       },
       environment: {
-        northflank: {
-          apiKey: process.env.NORTHFLANK_API_KEY!,
-          projectId: process.env.NORTHFLANK_PROJECT_ID!,
-          image: template?.image,
+        e2b: {
+          apiKey: process.env.E2B_API_KEY!,
         },
       },
       secrets: template?.secrets,
